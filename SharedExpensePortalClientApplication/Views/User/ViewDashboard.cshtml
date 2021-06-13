@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "User Dashboard";
+}
+
+<h2>Welcome to User Dashboard</h2>
+
+@HttpContext.Current.User.Identity.Name
+@using (Html.BeginForm("EnterExpense", "User", FormMethod.Get))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <div class="col">
+            <input type="submit" value="Enter Expense" name="Expense" class="btn btn-default" />
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ViewScoreCard", "User", FormMethod.Get))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <div class="col">
+            <input type="submit" value="View ScoreCard" name="Scorecard" class="btn btn-default" />
+        </div>
+    </div>
+}
+

@@ -46,15 +46,18 @@ namespace SharedExpensePortalClientApplication.Controllers
                         Response.Cookies.Add(cookie);
                         Session["UserName"] = data.UserName;
                         Session["UserId"] = data.LogInId;
+                        //TODO: Display Page with 3 buttons: Enter New Expense, View Score Card
 
-                        if (Url.IsLocalUrl(ReturnUrl))
+                        var queryResult = _db.ApplicationUserInformations.FirstOrDefault(a => a.LogInId == data.LogInId);
+
+                        if (queryResult != null)
                         {
-                            return Redirect(ReturnUrl);
+                            return RedirectToAction("ViewDashboard", "User");
                         }
                         else
                         {
                             return RedirectToAction("ViewUserInformation", new RouteValueDictionary(
-                                        new { controller = "User", action = "UserData", Id = data.LogInId }));
+                                new { controller = "User", action = "UserData", Id = data.LogInId }));
                         }
                     }
                     else
