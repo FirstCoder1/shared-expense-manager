@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[Groups]
+(
+	[GroupId] INT NOT NULL PRIMARY KEY, 
+    [GroupName] NVARCHAR(256) NOT NULL, 
+    [GroupDescription] NVARCHAR(MAX) NULL, 
+    [GroupExpense] MONEY NOT NULL DEFAULT 0.00,
+    [CreateDate] DATETIME2 NOT NULL DEFAULT GETDATE(), 
+    [LastUpdate] DATETIME2 NOT NULL DEFAULT GETDATE()
+)

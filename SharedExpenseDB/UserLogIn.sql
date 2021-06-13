@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[UserLogIn]
+(
+	[LogInId] INT NOT NULL PRIMARY KEY, 
+    [UserName] NVARCHAR(10) NOT NULL, 
+    [Password] NVARCHAR(50) NOT NULL,
+    [CreateDate] DATETIME2 NOT NULL DEFAULT GETDATE(), 
+    [LastUpdate] DATETIME2 NOT NULL DEFAULT GETDATE()
+)
