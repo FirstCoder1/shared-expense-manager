@@ -19,5 +19,6 @@ namespace ApplicationDataAccess
         public string Password { get; set; }
         public System.DateTime CreateDate { get; set; }
         public System.DateTime LastUpdate { get; set; }
+        public bool IsActive { get; set; }
     }
 }
