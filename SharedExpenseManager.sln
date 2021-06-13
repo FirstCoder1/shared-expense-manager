@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedExpenseManager", "SharedExpenseManager\SharedExpenseManager.csproj", "{D96639B3-2520-4731-B6EE-01B1DE19B77B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogInService", "LogInService\LogInService.csproj", "{09EFA6FB-B5E0-43CF-819A-4189839E8FA3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseService", "ExpenseService\ExpenseService.csproj", "{5038DB3D-9BB4-4522-8701-B1E0CEBA7139}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationDataAccess", "Ap
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SharedExpenseDB", "SharedExpenseDB\SharedExpenseDB.sqlproj", "{6BC3240E-F884-4AED-A069-0F61B574189B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedExpenseManager", "SharedExpenseManager\SharedExpenseManager.csproj", "{3A14296B-F98C-405A-80A2-495C5D369548}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D96639B3-2520-4731-B6EE-01B1DE19B77B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D96639B3-2520-4731-B6EE-01B1DE19B77B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D96639B3-2520-4731-B6EE-01B1DE19B77B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D96639B3-2520-4731-B6EE-01B1DE19B77B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09EFA6FB-B5E0-43CF-819A-4189839E8FA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09EFA6FB-B5E0-43CF-819A-4189839E8FA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09EFA6FB-B5E0-43CF-819A-4189839E8FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,6 +37,10 @@ Global
 		{6BC3240E-F884-4AED-A069-0F61B574189B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BC3240E-F884-4AED-A069-0F61B574189B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6BC3240E-F884-4AED-A069-0F61B574189B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3A14296B-F98C-405A-80A2-495C5D369548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A14296B-F98C-405A-80A2-495C5D369548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A14296B-F98C-405A-80A2-495C5D369548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A14296B-F98C-405A-80A2-495C5D369548}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
