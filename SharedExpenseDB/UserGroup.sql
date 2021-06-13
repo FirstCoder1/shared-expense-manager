@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[UserGroup]
 (
-	[UserGroupId] INT NOT NULL PRIMARY KEY, 
+	[UserGroupId] INT NOT NULL IDENTITY PRIMARY KEY, 
     [UserId] INT NOT NULL, 
     [GroupId] INT NOT NULL,
     [CreateDate] DATETIME2 NOT NULL DEFAULT GETDATE(), 

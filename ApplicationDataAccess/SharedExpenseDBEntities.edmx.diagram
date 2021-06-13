@@ -18,6 +18,7 @@
         <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_ExpenseType" ManuallyRouted="false" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_UserGroup_Groups" ManuallyRouted="false" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="SharedExpenseDBModel.FK_ApplicationUserInformation_UserLogIn" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

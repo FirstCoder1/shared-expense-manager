@@ -15,19 +15,20 @@
           <Key>
             <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserFirstName" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="UserLastName" Type="nvarchar" MaxLength="500" />
           <Property Name="UserEmailId" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="UserPhoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="LogInId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ExpenseType">
           <Key>
             <PropertyRef Name="ExpenseTypeId" />
           </Key>
-          <Property Name="ExpenseTypeId" Type="int" Nullable="false" />
+          <Property Name="ExpenseTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ExpenseTypeName" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="ExpenseTypeStatus" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
@@ -37,7 +38,7 @@
           <Key>
             <PropertyRef Name="GroupId" />
           </Key>
-          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="GroupName" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="GroupDescription" Type="nvarchar(max)" />
           <Property Name="GroupExpense" Type="money" Nullable="false" />
@@ -48,7 +49,7 @@
           <Key>
             <PropertyRef Name="StatusId" />
           </Key>
-          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="StatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="StatusDescription" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
@@ -57,7 +58,7 @@
           <Key>
             <PropertyRef Name="ExpenseId" />
           </Key>
-          <Property Name="ExpenseId" Type="int" Nullable="false" />
+          <Property Name="ExpenseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="ExpenseDate" Type="datetime2" Precision="7" Nullable="false" />
@@ -72,7 +73,7 @@
           <Key>
             <PropertyRef Name="UserGroupId" />
           </Key>
-          <Property Name="UserGroupId" Type="int" Nullable="false" />
+          <Property Name="UserGroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="GroupId" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
@@ -82,13 +83,25 @@
           <Key>
             <PropertyRef Name="LogInId" />
           </Key>
-          <Property Name="LogInId" Type="int" Nullable="false" />
+          <Property Name="LogInId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name="FK_ApplicationUserInformation_UserLogIn">
+          <End Role="UserLogIn" Type="Self.UserLogIn" Multiplicity="1" />
+          <End Role="ApplicationUserInformation" Type="Self.ApplicationUserInformation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserLogIn">
+              <PropertyRef Name="LogInId" />
+            </Principal>
+            <Dependent Role="ApplicationUserInformation">
+              <PropertyRef Name="LogInId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserExpense_ApplicationUserInformation">
           <End Role="ApplicationUserInformation" Type="Self.ApplicationUserInformation" Multiplicity="1" />
           <End Role="UserExpense" Type="Self.UserExpense" Multiplicity="*" />
@@ -158,6 +171,10 @@
           <EntitySet Name="UserExpense" EntityType="Self.UserExpense" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserGroup" EntityType="Self.UserGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserLogIn" EntityType="Self.UserLogIn" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ApplicationUserInformation_UserLogIn" Association="Self.FK_ApplicationUserInformation_UserLogIn">
+            <End Role="UserLogIn" EntitySet="UserLogIn" />
+            <End Role="ApplicationUserInformation" EntitySet="ApplicationUserInformation" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserExpense_ApplicationUserInformation" Association="Self.FK_UserExpense_ApplicationUserInformation">
             <End Role="ApplicationUserInformation" EntitySet="ApplicationUserInformation" />
             <End Role="UserExpense" EntitySet="UserExpense" />
@@ -202,6 +219,8 @@
           <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
           <NavigationProperty Name="UserExpenses" Relationship="Self.FK_UserExpense_ApplicationUserInformation" FromRole="ApplicationUserInformation" ToRole="UserExpense" />
           <NavigationProperty Name="UserGroups" Relationship="Self.FK_UserGroup_ApplicationUserInformation" FromRole="ApplicationUserInformation" ToRole="UserGroup" />
+          <Property Name="LogInId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserLogIn" Relationship="SharedExpenseDBModel.FK_ApplicationUserInformation_UserLogIn" FromRole="ApplicationUserInformation" ToRole="UserLogIn" />
         </EntityType>
         <EntityType Name="ExpenseType">
           <Key>
@@ -276,6 +295,7 @@
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ApplicationUserInformations" Relationship="SharedExpenseDBModel.FK_ApplicationUserInformation_UserLogIn" FromRole="UserLogIn" ToRole="ApplicationUserInformation" />
         </EntityType>
         <Association Name="FK_UserExpense_ApplicationUserInformation">
           <End Role="ApplicationUserInformation" Type="Self.ApplicationUserInformation" Multiplicity="1" />
@@ -366,7 +386,23 @@
             <End Role="Status" EntitySet="Status" />
             <End Role="UserExpense" EntitySet="UserExpenses" />
           </AssociationSet>
+          <AssociationSet Name="FK_ApplicationUserInformation_UserLogIn" Association="SharedExpenseDBModel.FK_ApplicationUserInformation_UserLogIn">
+            <End Role="UserLogIn" EntitySet="UserLogIns" />
+            <End Role="ApplicationUserInformation" EntitySet="ApplicationUserInformations" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_ApplicationUserInformation_UserLogIn">
+          <End Type="SharedExpenseDBModel.UserLogIn" Role="UserLogIn" Multiplicity="1" />
+          <End Type="SharedExpenseDBModel.ApplicationUserInformation" Role="ApplicationUserInformation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserLogIn">
+              <PropertyRef Name="LogInId" />
+            </Principal>
+            <Dependent Role="ApplicationUserInformation">
+              <PropertyRef Name="LogInId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -383,6 +419,7 @@
           <EntitySetMapping Name="ApplicationUserInformations">
             <EntityTypeMapping TypeName="SharedExpenseDBModel.ApplicationUserInformation">
               <MappingFragment StoreEntitySet="ApplicationUserInformation">
+                <ScalarProperty Name="LogInId" ColumnName="LogInId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="UserFirstName" ColumnName="UserFirstName" />
                 <ScalarProperty Name="UserLastName" ColumnName="UserLastName" />

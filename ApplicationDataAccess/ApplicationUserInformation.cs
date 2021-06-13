@@ -28,10 +28,12 @@ namespace ApplicationDataAccess
         public string UserPhoneNumber { get; set; }
         public System.DateTime CreateDate { get; set; }
         public System.DateTime LastUpdate { get; set; }
+        public int LogInId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserExpense> UserExpenses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserGroup> UserGroups { get; set; }
+        public virtual UserLogIn UserLogIn { get; set; }
     }
 }

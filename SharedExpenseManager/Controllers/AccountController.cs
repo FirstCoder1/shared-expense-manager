@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
+using ApplicationDataAccess;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -15,6 +17,8 @@ namespace SharedExpenseManager.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private SharedExpenseDBEntities _dbContext = new SharedExpenseDBEntities();
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -151,27 +155,66 @@ namespace SharedExpenseManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                using (SharedExpenseDBEntities db = new SharedExpenseDBEntities())
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    var userCheck = db.UserLogIns.Where(x => x.UserName == model.UserName).FirstOrDefault();
+                    UserLogIn userData = new UserLogIn();
 
-                    return RedirectToAction("Index", "Home");
+                    if (userCheck == null)
+                    {
+                        model.Password = GetHash.GetHashForString(model.Password);
+                        _dbContext.Configuration.ValidateOnSaveEnabled = false;
+                        var storeData = new UserLogIn()
+                        {
+                            UserName = model.UserName,
+                            //TODO: Add EmailId to store with registration to send email link
+                            Password = model.Password
+                        };
+                        Session["UserId"] = storeData.LogInId;
+
+                        _dbContext.UserLogIns.Add(storeData);
+                        _dbContext.SaveChanges();
+                        return RedirectToAction("ViewUserInformation");
+                    }
+                    else
+                    {
+                        ViewBag.error = "Email already exists";
+                        return View();
+                    }
                 }
-                AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
+        public ActionResult ViewUserInformation()
+        {
+            if (Session["UserId"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("");
+            }
+            //ApplicationUserInformation userData = new ApplicationUserInformation();
+
+            //using (SharedExpenseDBEntities _db = new SharedExpenseDBEntities())
+            //{
+            //    var userId = Convert.ToInt32(ReturnUrl["Id"]);
+            //    var queryResult = _db.ApplicationUserInformations.FirstOrDefault(a => a.LogInId == userId);
+            //    if (queryResult != null)
+            //    {
+            //        userData.LogInId = userId;
+            //        userData.UserFirstName = queryResult.UserFirstName;
+            //        userData.UserLastName = queryResult.UserLastName;
+            //        userData.UserEmailId = queryResult.UserEmailId;
+            //        userData.UserPhoneNumber = queryResult.UserPhoneNumber;
+            //    }
+            //}
+            //return View(userData);
+        }
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]

@@ -14,11 +14,20 @@ namespace ApplicationDataAccess
     
     public partial class UserLogIn
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public UserLogIn()
+        {
+            this.ApplicationUserInformations = new HashSet<ApplicationUserInformation>();
+        }
+    
         public int LogInId { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public System.DateTime CreateDate { get; set; }
         public System.DateTime LastUpdate { get; set; }
         public bool IsActive { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ApplicationUserInformation> ApplicationUserInformations { get; set; }
     }
 }
