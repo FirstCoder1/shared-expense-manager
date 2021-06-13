@@ -49,7 +49,7 @@ namespace SharedExpensePortalClientApplication.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("ViewScoreCard");
+                    return RedirectToAction("ViewDashboard");
                 }
             }
         }
@@ -98,11 +98,12 @@ namespace SharedExpensePortalClientApplication.Controllers
                             //TODO: Add EmailId to store with registration to send email link
                             Password = model.Password
                         };
-                        Session["UserId"] = storeData.LogInId;
-
                         _db.UserLogIns.Add(storeData);
                         _db.SaveChanges();
-                        return RedirectToAction("ViewUserInformation");
+                        Session["UserId"] = storeData.LogInId;
+
+                        return RedirectToAction("ViewUserInformation", new RouteValueDictionary(
+                            new { controller = "User", action = "UserData", Id = storeData.LogInId }));
                     }
                     else
                     {
@@ -143,7 +144,7 @@ namespace SharedExpensePortalClientApplication.Controllers
 
                     _db.ApplicationUserInformations.Add(storeData);
                     _db.SaveChanges();
-                    return RedirectToAction("ViewUserDashboard");
+                    return RedirectToAction("ViewDashboard");
                 }
                 else
                 {
