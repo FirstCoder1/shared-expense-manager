@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
-using ApplicationDataAccess;
+using SharedExpenseApplicationDataAccess;
 using SharedExpensePortalClientApplication.Models;
 
 namespace SharedExpensePortalClientApplication.Controllers
@@ -25,6 +26,12 @@ namespace SharedExpensePortalClientApplication.Controllers
                 ViewBag.ExpenseList = expenseList;
             }
 
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Register()
+        {
             return View();
         }
 
@@ -68,6 +75,47 @@ namespace SharedExpensePortalClientApplication.Controllers
             }
         }
 
+        //POST: UserRegister
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (SharedExpenseDBEntities _db = new SharedExpenseDBEntities())
+                {
+                    var userCheck = _db.UserLogIns.Where(x => x.UserName == model.UserName).FirstOrDefault();
+                    UserLogIn userData = new UserLogIn();
+
+                    if (userCheck == null)
+                    {
+                        model.Password = GetHash.GetHashForString(model.Password);
+                        _db.Configuration.ValidateOnSaveEnabled = false;
+                        var storeData = new UserLogIn()
+                        {
+                            UserName = model.UserName,
+                            //TODO: Add EmailId to store with registration to send email link
+                            Password = model.Password
+                        };
+                        Session["UserId"] = storeData.LogInId;
+
+                        _db.UserLogIns.Add(storeData);
+                        _db.SaveChanges();
+                        return RedirectToAction("ViewUserInformation");
+                    }
+                    else
+                    {
+                        ViewBag.error = "Email already exists";
+                        return View();
+                    }
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
         //POST: UserInformation
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -108,7 +156,7 @@ namespace SharedExpensePortalClientApplication.Controllers
         //POST: Expense Entry
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EnterUserExpenses(ExpenseViewModel expenseInformation, string ReturnUrl = "")
+        public async Task<ActionResult> EnterUserExpenses(ExpenseViewModel expenseInformation, string ReturnUrl = "")
         {
             ApplicationUserInformation userData = null;
             ExpenseType expenseType = null;
@@ -116,6 +164,7 @@ namespace SharedExpensePortalClientApplication.Controllers
             using (SharedExpenseDBEntities _db = new SharedExpenseDBEntities())
             {
                 var userId = Convert.ToInt32(Session["UserId"]);
+                var sessionUserInfo = _db.ApplicationUserInformations.Where(x => x.LogInId == userId).Select(x => x).FirstOrDefault();
                 //Check if entered user is present in application
                 var queryResult = _db.UserLogIns.FirstOrDefault(a => a.UserName == expenseInformation.UserName);
                 _db.Configuration.ValidateOnSaveEnabled = false;
@@ -150,7 +199,34 @@ namespace SharedExpensePortalClientApplication.Controllers
                     _db.ExpenseTypes.Add(expenseType);
                     _db.SaveChanges();
                 }
+
+                var paidUserId = userData != null ? userData.UserId :
+                            _db.ApplicationUserInformations.Where(x => x.LogInId == queryResult.LogInId).Select(x => x.UserId).FirstOrDefault();
+
                 //TODO: Create User Group with current user and user entered with expense form to track One-To-One expense
+                var appUserId = paidUserId == null ? _db.ApplicationUserInformations.Where(x => x.UserEmailId == expenseInformation.EmailId)
+                    .Select(x => x.UserId).FirstOrDefault() : paidUserId;
+                var userGroupResult = _db.UserGroups.Where(x => x.UserId == appUserId && x.UserId == sessionUserInfo.UserId).GroupBy(x => x.GroupId).
+                    Where(grp => grp.Count() == 2).Select(grp => grp.Key).FirstOrDefault();
+
+                if (userGroupResult == 0)
+                {
+                    userGroup = new UserGroup
+                    {
+                        UserId = Convert.ToInt32(Session["UserId"]),
+                        Group = new Group
+                        {
+                            //Build Group with User EmailIDs
+                            GroupName = expenseInformation.EmailId.Split('@')[0] + " " +
+                                _db.ApplicationUserInformations.Where(x => x.UserLogIn.LogInId == userId).Select(x => x.UserEmailId)
+                                .ToString().Split('@')[0],
+                            GroupDescription = "AutoGenerated Group"
+                        }
+                    };
+                }
+
+                _db.UserGroups.Add(userGroup);
+                _db.SaveChanges();
 
                 //Store Expense information in [dbo].[UserExpense] table
                 var storeData = new UserExpense()
@@ -160,14 +236,13 @@ namespace SharedExpensePortalClientApplication.Controllers
                     ExpenseDate = expenseInformation.ExpenseDate,
                     ExpenseTypeId = expenseType != null ? expenseType.ExpenseTypeId : _db.ExpenseTypes.Where(x => x.ExpenseTypeName == expenseInformation.Expense)
                                     .Select(x => x.ExpenseTypeId).FirstOrDefault(),
-                    UserId = userData != null ? userData.UserId : 
-                            _db.ApplicationUserInformations.Where(x => x.LogInId == queryResult.LogInId).Select(x => x.UserId).FirstOrDefault(),
+                    GroupId = userGroupResult != null ? userGroupResult : userGroup.GroupId,
                     ExpenseAmount = expenseInformation.ExpenseAmount,
                     ExpenseStatusId = _db.Status.FirstOrDefault(x => x.StatusDescription == "ACTIVE").StatusId
                 };
-
                 _db.UserExpenses.Add(storeData);
                 _db.SaveChanges();
+
                 return RedirectToAction("ViewDashboard");
             }
         }

@@ -8,7 +8,7 @@
         <EntityTypeShape EntityType="SharedExpenseDBModel.C__RefactorLog" Width="1.5" PointX="5.75" PointY="2.25" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.ApplicationUserInformation" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.ExpenseType" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="SharedExpenseDBModel.Group" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SharedExpenseDBModel.Group" Width="1.5" PointX="3.75" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.Status" Width="1.5" PointX="0.75" PointY="8.375" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.UserExpense" Width="1.5" PointX="3" PointY="4.125" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.UserGroup" Width="1.5" PointX="6" PointY="4.75" IsExpanded="true" />
@@ -19,6 +19,7 @@
         <AssociationConnector Association="SharedExpenseDBModel.FK_UserGroup_Groups" ManuallyRouted="false" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_Status" ManuallyRouted="false" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_ApplicationUserInformation_UserLogIn" />
+        <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_Groups" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

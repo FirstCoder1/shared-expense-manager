@@ -275,9 +275,9 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ApplicationDataAccess\ApplicationDataAccess.csproj">
-      <Project>{14f3d6c0-36ee-40ae-b21f-c307ed3c61f5}</Project>
-      <Name>ApplicationDataAccess</Name>
+    <ProjectReference Include="..\SharedExpenseApplicationDataAccess\SharedExpenseApplicationDataAccess.csproj">
+      <Project>{bc32b87c-0116-47b5-aae2-2ade29afbf5a}</Project>
+      <Name>SharedExpenseApplicationDataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
