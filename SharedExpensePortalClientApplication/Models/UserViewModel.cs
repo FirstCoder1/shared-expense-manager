@@ -76,6 +76,10 @@ namespace SharedExpensePortalClientApplication.Models
         [DataType(DataType.Text)]
         public string Description { get; set; }
 
+        [Display(Name = "Group Members")]
+        [DataType(DataType.Text)]
+        public string GroupMembers { get; set; }
+
         [Display(Name = "Expense Date")]
         [DataType(DataType.DateTime)]
         public DateTime ExpenseDate { get; set; }

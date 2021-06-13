@@ -25,3 +25,13 @@
     </div>
 }
 
+@using (Html.BeginForm("EditUserInformation", "User", FormMethod.Get))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <div class="col">
+            <input type="submit" value="Edit User Information" name="UserInformation" class="btn btn-default" />
+        </div>
+    </div>
+}
+
