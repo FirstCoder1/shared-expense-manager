@@ -86,7 +86,7 @@ namespace SharedExpensePortalClientApplication.Models
 
         [Display(Name = "Expense Amount")]
         [DataType(DataType.Currency)]
-        public decimal ExpenseAmount { get; set; }
+        public int ExpenseAmount { get; set; }
 
         public string Expense { get; set; }
 

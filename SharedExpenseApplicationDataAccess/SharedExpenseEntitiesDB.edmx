@@ -82,7 +82,7 @@
           <Property Name="GroupId" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
-          <Property Name="TransactionAmount" Type="int" />
+          <Property Name="TransactionAmount" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="UserLogIn">
           <Key>
@@ -262,7 +262,7 @@
           <Property Name="GroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="GroupName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="GroupDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="GroupExpense" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="GroupExpense" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
           <NavigationProperty Name="UserGroups" Relationship="Self.FK_UserGroup_Groups" FromRole="Groups" ToRole="UserGroup" />
@@ -294,7 +294,7 @@
           <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
           <NavigationProperty Name="ApplicationUserInformation" Relationship="Self.FK_UserGroup_ApplicationUserInformation" FromRole="UserGroup" ToRole="ApplicationUserInformation" />
           <NavigationProperty Name="Group" Relationship="Self.FK_UserGroup_Groups" FromRole="UserGroup" ToRole="Groups" />
-          <Property Name="TransactionAmount" Type="Int32" />
+          <Property Name="TransactionAmount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
         </EntityType>
         <EntityType Name="UserLogIn">
           <Key>

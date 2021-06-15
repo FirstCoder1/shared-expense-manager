@@ -18,7 +18,8 @@ namespace SharedExpensePortalClientApplication.Controllers
         private static ApplicationUserInformation userData = null;
         private static ExpenseType expenseType = null;
         private static UserGroup userGroup = null;
-        List<UserGroup> userGroupMembers = null;
+        private List<UserGroup> userGroupMembers = null;
+        private static List<UserGroupTransaction> groupUserTransaction = new List<UserGroupTransaction>();
 
         //Get: Enter Expense
         [HttpGet]
@@ -223,34 +224,41 @@ namespace SharedExpensePortalClientApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EnterUserExpenses(ExpenseViewModel expenseInformation, string ReturnUrl = "")
         {
+            List<int> transactionAmount = new List<int>();
             if (ModelState.IsValid)
             {
                 //Split Each Group users separated by Comma
                 List<string> groupUsers = expenseInformation.GroupMembers.Split(',').ToList();
-                groupUsers.Add(expenseInformation.UserName);
-
                 //Open Database Connection
                 using (SharedExpenseDBEntities _db = new SharedExpenseDBEntities())
                 {
-                    var userId = Convert.ToInt32(Session["UserId"]);
-                    var sessionUserInfo = _db.ApplicationUserInformations.Where(x => x.LogInId == userId).Select(x => x).FirstOrDefault();
-
+                    var sessionuserId = Convert.ToInt32(Session["UserId"]);
+                    var sessionUserInfo = _db.ApplicationUserInformations.Where(x => x.LogInId == sessionuserId).Select(x => x).FirstOrDefault();
+                    groupUsers.Add(sessionUserInfo.UserEmailId);
                     //Create users missing from the database
-                    CreateMissingUsers(_db, groupUsers);
+                    foreach (var user in groupUsers)
+                    {
+                        groupUserTransaction.Add(new UserGroupTransaction { UserId = CreateMissingUsers(user, _db), 
+                            IsPayer = false, TransactionAmount = -(expenseInformation.ExpenseAmount / (groupUsers.Count + 1))});
+                    }
+
+                    //Identify if Payer's user prfile exists in the system, if not insert new profile
+                    //Set IsPayer flag to true in UserGroupTransaction model and allocate amount other owe after sharing the bill equally
+                    groupUserTransaction.Add(new UserGroupTransaction { UserId = CreateMissingUsers(expenseInformation.EmailId, _db), 
+                        TransactionAmount = expenseInformation.ExpenseAmount - expenseInformation.ExpenseAmount/ (groupUsers.Count + 1), IsPayer = true });
 
                     //Check if Expense already exist or need to create a new record to show in dropdown list
                     CreateExpense(_db, expenseInformation);
 
-                    CreateGroupForLogInUser(_db, expenseInformation, userId);
+                    //Create Group for Payer
+                    var groupId = CreateGroupForPayer(_db, expenseInformation, groupUserTransaction.Where(x => x.IsPayer == true).Select(x=>x).FirstOrDefault());
 
-                    //Create User Group with current user and user entered with expense form to track One-To-One expense
+                    //Adding all the users with user expenses to this group with transaction amount loaded into DB
                     foreach (var user in groupUsers)
                     {
-                        //This will alway return value as we are creating users who are not present in the system right now and storing EmailId
-                        var appUserId = _db.ApplicationUserInformations.Where(x => x.UserEmailId == expenseInformation.EmailId)
-                            .Select(x => x.UserId).FirstOrDefault();
-
-                        //If Group > 1 => Divide by GroupId
+                        ////This will alway return value as we are creating users who are not present in the system right now and storing EmailId
+                        //var appUserId = _db.ApplicationUserInformations.Where(x => x.UserEmailId == expenseInformation.EmailId)
+                        //    .Select(x => x.UserId).FirstOrDefault();
 
                         ////Identify if both the users are already part of single Group
                         //var userGroupResult = _db.UserGroups.Where(x => x.UserId == appUserId && x.UserId == sessionUserInfo.UserId).GroupBy(x => x.GroupId).
@@ -259,7 +267,7 @@ namespace SharedExpensePortalClientApplication.Controllers
                         userGroupMembers.Add(new UserGroup
                         {
                             GroupId = userGroup.GroupId,
-                            UserId = appUserId
+                            //UserId = appUserId
                         });
                     }
 
@@ -289,7 +297,7 @@ namespace SharedExpensePortalClientApplication.Controllers
             return View();
         }
 
-        private static void CreateGroupForLogInUser(SharedExpenseDBEntities dbContext, ExpenseViewModel expenseInfo, int userId)
+        private static int CreateGroupForPayer(SharedExpenseDBEntities dbContext, ExpenseViewModel expenseInfo, UserGroupTransaction userTransaction)
         {
             //User who paid the bill
             var paidUserId = userData != null ? userData.UserId :
@@ -298,12 +306,13 @@ namespace SharedExpensePortalClientApplication.Controllers
             //Create a Default group by user logging expenses
             userGroup = new UserGroup
             {
-                UserId = userId,
+                UserId = userTransaction.UserId,
+                TransactionAmount = userTransaction.TransactionAmount,
                 Group = new Group
                 {
                     //Build Group with User EmailIDs
                     GroupName = expenseInfo.EmailId.Split('@')[0] + " " +
-                        dbContext.ApplicationUserInformations.Where(x => x.UserLogIn.LogInId == userId).Select(x => x.UserEmailId)
+                        dbContext.ApplicationUserInformations.Where(x => x.UserLogIn.LogInId == userTransaction.UserId).Select(x => x.UserEmailId)
                         .ToString().Split('@')[0],
                     GroupDescription = "AutoGenerated Group"
                 }
@@ -311,7 +320,7 @@ namespace SharedExpensePortalClientApplication.Controllers
 
             dbContext.UserGroups.Add(userGroup);
             dbContext.SaveChanges();
-
+            return userGroup.GroupId;
         }
 
         private static void CreateExpense(SharedExpenseDBEntities dbContext, ExpenseViewModel expenseInfo)
@@ -331,41 +340,40 @@ namespace SharedExpensePortalClientApplication.Controllers
 
         }
 
-        private static void CreateMissingUsers(SharedExpenseDBEntities dbContext, List<string> groupUsers)
+        private static int CreateMissingUsers(string user, SharedExpenseDBEntities _db)
         {
-
             //Parse all the group members entered by the users to check if they exist in the system, if user doesn't exist in the system,
             //Add user and send email to user using emailID
             //Default UserName will be extracted from emailID, which user will be able to update
             //User Password will be set by default which will be included in email sent
-            foreach (var user in groupUsers)
+            //Split UserName from EmailId
+
+            var _user = user.Split('@').ToString().Trim();
+            //Check if user who paid is present in application
+            var queryResult = _db.UserLogIns.FirstOrDefault(a => a.UserName == _user);
+
+            _db.Configuration.ValidateOnSaveEnabled = false;
+
+            if (queryResult == null)
             {
-                //Split UserName from EmailId
-                var _user = user.Split('@').ToString().Trim();
-                //Check if user who paid is present in application
-                var queryResult = dbContext.UserLogIns.FirstOrDefault(a => a.UserName == _user);
-
-                dbContext.Configuration.ValidateOnSaveEnabled = false;
-
-                if (queryResult == null)
+                //Create User with UserName and EmailId and send email to user with provided EmailId
+                userData = new ApplicationUserInformation
                 {
-                    //Create User with UserName and EmailId and send email to user with provided EmailId
-                    userData = new ApplicationUserInformation
+                    UserFirstName = _user,
+                    UserEmailId = user,
+                    UserLogIn = new UserLogIn
                     {
-                        UserFirstName = _user,
-                        UserEmailId = user,
-                        UserLogIn = new UserLogIn
-                        {
-                            UserName = _user,
-                            //Generate Random Password and send this to user via email and have them reset upon logIn
-                            Password = GetHash.GetHashForString(Membership.GeneratePassword(12, 3))
-                        }
-                    };
-
-                    dbContext.ApplicationUserInformations.Add(userData);
-                    dbContext.SaveChanges();
-                }
+                        UserName = _user,
+                        //Generate Random Password and send this to user via email and have them reset upon logIn
+                        Password = GetHash.GetHashForString(Membership.GeneratePassword(12, 3))
+                    }
+                };
+                _db.ApplicationUserInformations.Add(userData);
+                _db.SaveChanges();
             }
+
+            return queryResult != null ? _db.ApplicationUserInformations.Where(x => x.LogInId == queryResult.LogInId).Select(x => x.UserId).FirstOrDefault()
+                : userData.UserId;
         }
 
         //LogOut

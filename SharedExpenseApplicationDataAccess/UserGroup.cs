@@ -19,7 +19,7 @@ namespace SharedExpenseApplicationDataAccess
         public int GroupId { get; set; }
         public System.DateTime CreateDate { get; set; }
         public System.DateTime LastUpdate { get; set; }
-        public Nullable<int> TransactionAmount { get; set; }
+        public decimal TransactionAmount { get; set; }
     
         public virtual ApplicationUserInformation ApplicationUserInformation { get; set; }
         public virtual Group Group { get; set; }
