@@ -66,6 +66,7 @@
     <Build Include="Groups.sql" />
     <Build Include="Score.sql" />
     <Build Include="Status.sql" />
+    <Build Include="UserScoreView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="SharedExpenseDB.refactorlog" />

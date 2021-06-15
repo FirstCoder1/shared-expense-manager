@@ -1,8 +1,8 @@
-﻿USE SharedExpenseDB 
-GO
+﻿CREATE PROCEDURE [dbo].[UserScoreView]
+	@UserId int = 0
+AS
 
 DECLARE @UserCount int = 0
-DECLARE @UserId int = 10
 DECLARE @Parser int = 1
 DECLARE @GroupCount int = 1
 DECLARE @Score decimal = 0.00
@@ -56,18 +56,17 @@ SELECT @UserCount = COUNT(*) FROM @UserList
 --Loop through all the users and I will owe money to whoever paid
 WHILE(@UserCount > 0)
 BEGIN
-	SELECT * FROM @UserGroupMapping WHERE UserId = (SELECT UserId FROM @UserList WHERE Id = @Parser) AND IsPayer = 1
+	SELECT @RowCount = COUNT(*) FROM @UserGroupMapping WHERE UserId = (SELECT UserId FROM @UserList WHERE Id = @Parser) AND IsPayer = 1
 	--Capture GROUP information for each group user is part of and someone else paid
-	IF @@ROWCOUNT > 0 
+	IF @RowCount > 0 
 		--For account we need to capture score for, we will capture all the groups where user was present and someone else was payer
 		INSERT INTO @UserGroupList
 		SELECT GroupId FROM @UserGroupMapping WHERE UserId = (SELECT UserId FROM @UserList WHERE Id = @Parser) AND IsPayer = 1
-		--SELECT @GroupCount = COUNT(*) FROM @UserGroupList
+		SELECT @GroupCount = COUNT(*) FROM @UserGroupList
 
-		SELECT * FROM @UserGroupList 
-		--SELECT @ScoreUser = UI.UserName FROM [dbo].[ApplicationUserInformation] AI INNER JOIN
-		--[dbo].[UserLogIn] UI ON AI.LogInId = UI.LogInId
-		--WHERE AI.UserId in (SELECT DISTINCT UserId FROM @UserGroupList)
+		SELECT @ScoreUser = UI.UserName FROM [dbo].[ApplicationUserInformation] AI INNER JOIN
+		[dbo].[UserLogIn] UI ON AI.LogInId = UI.LogInId
+		WHERE AI.UserId in (SELECT DISTINCT UserId FROM @UserList WHERE Id = @Parser)
 
 		WHILE(@GroupCount > 0)
 			BEGIN
@@ -81,5 +80,7 @@ BEGIN
 	SET @UserCount = @UserCount - 1
 	SET @Parser = @Parser + 1
 	SET @Score = 0
-	SELECT * FROM @ScoreView
 END
+SELECT * FROM @ScoreView
+
+GO
