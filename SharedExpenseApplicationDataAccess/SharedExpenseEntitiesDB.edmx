@@ -388,7 +388,7 @@
             <End Role="GroupExpense" EntitySet="GroupExpenses" />
           </AssociationSet>
           <FunctionImport Name="UserScoreView" ReturnType="Collection(SharedExpenseDBModel.UserScoreView_Result)">
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          <Parameter Name="UserId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <Association Name="FK_ExpenseType_Status">

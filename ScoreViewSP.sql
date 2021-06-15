@@ -1,7 +1,3 @@
-﻿CREATE PROCEDURE [dbo].[UserScoreView]
-	@UserId int = 0
-AS
-
 DECLARE @UserCount int = 0
 DECLARE @Cursor int = 1
 DECLARE @InnerUserCount int = 0
@@ -53,19 +49,23 @@ DECLARE @UserScore TABLE(
 
 INSERT INTO @PayerGroupMapping
 SELECT GroupId, UserId, TransactionAmount, IsPayer FROM (SELECT * FROM [dbo].[UserGroup] WHERE GroupId in 
-(SELECT GroupId FROM [dbo].[UserGroup] WHERE UserId = @UserId)) A WHERE A.IsPayer = 1 ORDER BY GroupId ASC
+(SELECT GroupId FROM [dbo].[UserGroup] WHERE UserId = 10)) A WHERE A.IsPayer = 1 ORDER BY GroupId ASC
+SELECT * FROM @PayerGroupMapping
 
 --Pick groupId
 INSERT INTO @GroupList
 SELECT GroupId FROM @PayerGroupMapping
+SELECT * FROM @GroupList
 
 INSERT INTO @SelfGroupExpenseAmount
 SELECT UG.GroupId, UG.UserId, PG.UserId, UG.TransactionAmount FROM [dbo].[UserGroup] UG 
 INNER JOIN @PayerGroupMapping PG ON UG.GroupId = PG.GroupId
-WHERE UG.GroupId IN (SELECT GroupId FROM @GroupList) AND UG.UserId = @UserId
+WHERE UG.GroupId IN (SELECT GroupId FROM @GroupList) AND UG.UserId = 10
+SELECT * FROM @SelfGroupExpenseAmount
 
 INSERT INTO @UsersToDisplay
 SELECT PayerId, COUNT(*) Count FROM @SelfGroupExpenseAmount GROUP BY PayerId
+SELECT * FROM @UsersToDisplay
 
 SELECT @UserCount = COUNT(*) FROM @UsersToDisplay
 WHILE(@UserCount > 0)
@@ -73,7 +73,8 @@ BEGIN
 	INSERT INTO @UserScore
 	SELECT PayerId, ExpenseAmount FROM @SelfGroupExpenseAmount WHERE PayerId = (SELECT PayerId FROM @UsersToDisplay WHERE ID = @Cursor)
 	SELECT @InnerUserCount = COUNT(*) FROM @UserScore
-	
+	SELECT * FROM @UserScore
+
 	SELECT @UserName = A.UserName FROM(SELECT DISTINCT(UI.UserName) AS UserName FROM @UserScore GA
 	INNER JOIN [dbo].[ApplicationUserInformation] AI ON GA.PayerId = AI.UserId
 	INNER JOIN [dbo].[UserLogIn] UI ON AI.LogInId = UI.LogInId) A
@@ -90,5 +91,4 @@ BEGIN
 	DELETE FROM @UserScore
 END
 SELECT * FROM @ScoreView
-
 GO

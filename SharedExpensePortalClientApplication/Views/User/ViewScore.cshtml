@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "User Score Dashboard";
 }
-<h2>ViewRandom</h2>
+<h2>User Score Card</h2>
 
 @using (Html.BeginForm("ViewScore", "User", FormMethod.Get))
 {
@@ -33,3 +33,6 @@
     </table>
  }
 
+<div>
+    @Html.ActionLink("Back to Dashboard", "ViewDashboard")
+</div>
