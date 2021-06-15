@@ -7,5 +7,6 @@
     [LastUpdate] DATETIME2 NOT NULL DEFAULT GETDATE()
     CONSTRAINT [FK_UserGroup_ApplicationUserInformation] FOREIGN KEY ([UserId]) REFERENCES [ApplicationUserInformation]([UserId]), 
     [TransactionAmount] MONEY NOT NULL DEFAULT 0.00, 
+    [IsPayer] BIT NULL DEFAULT 0 , 
     CONSTRAINT [FK_UserGroup_Groups] FOREIGN KEY ([GroupId]) REFERENCES [Groups]([GroupId])
 )

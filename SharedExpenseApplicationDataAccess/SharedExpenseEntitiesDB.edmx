@@ -83,6 +83,7 @@
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="TransactionAmount" Type="money" Nullable="false" />
+          <Property Name="IsPayer" Type="bit" />
         </EntityType>
         <EntityType Name="UserLogIn">
           <Key>
@@ -295,6 +296,7 @@
           <NavigationProperty Name="ApplicationUserInformation" Relationship="Self.FK_UserGroup_ApplicationUserInformation" FromRole="UserGroup" ToRole="ApplicationUserInformation" />
           <NavigationProperty Name="Group" Relationship="Self.FK_UserGroup_Groups" FromRole="UserGroup" ToRole="Groups" />
           <Property Name="TransactionAmount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="IsPayer" Type="Boolean" />
         </EntityType>
         <EntityType Name="UserLogIn">
           <Key>
@@ -517,6 +519,7 @@
           <EntitySetMapping Name="UserGroups">
             <EntityTypeMapping TypeName="SharedExpenseDBModel.UserGroup">
               <MappingFragment StoreEntitySet="UserGroup">
+                <ScalarProperty Name="IsPayer" ColumnName="IsPayer" />
                 <ScalarProperty Name="TransactionAmount" ColumnName="TransactionAmount" />
                 <ScalarProperty Name="UserGroupId" ColumnName="UserGroupId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
