@@ -12,7 +12,7 @@ namespace SharedExpenseApplicationDataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class UserExpense
+    public partial class GroupExpense
     {
         public int ExpenseId { get; set; }
         public string Title { get; set; }

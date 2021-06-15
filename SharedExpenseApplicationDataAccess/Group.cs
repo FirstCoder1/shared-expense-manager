@@ -17,8 +17,8 @@ namespace SharedExpenseApplicationDataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Group()
         {
-            this.UserExpenses = new HashSet<UserExpense>();
             this.UserGroups = new HashSet<UserGroup>();
+            this.GroupExpenses = new HashSet<GroupExpense>();
         }
     
         public int GroupId { get; set; }
@@ -29,8 +29,8 @@ namespace SharedExpenseApplicationDataAccess
         public System.DateTime LastUpdate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserExpense> UserExpenses { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserGroup> UserGroups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GroupExpense> GroupExpenses { get; set; }
     }
 }

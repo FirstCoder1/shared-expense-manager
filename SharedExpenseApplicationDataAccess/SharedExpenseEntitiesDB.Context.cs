@@ -31,8 +31,8 @@ namespace SharedExpenseApplicationDataAccess
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Score> Scores { get; set; }
         public virtual DbSet<Status> Status { get; set; }
-        public virtual DbSet<UserExpense> UserExpenses { get; set; }
         public virtual DbSet<UserGroup> UserGroups { get; set; }
         public virtual DbSet<UserLogIn> UserLogIns { get; set; }
+        public virtual DbSet<GroupExpense> GroupExpenses { get; set; }
     }
 }

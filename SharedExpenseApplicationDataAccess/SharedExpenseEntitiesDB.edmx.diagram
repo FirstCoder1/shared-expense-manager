@@ -11,15 +11,16 @@
         <EntityTypeShape EntityType="SharedExpenseDBModel.Group" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.Score" Width="1.5" PointX="4.75" PointY="1.5" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.Status" Width="1.5" PointX="0.875" PointY="7" IsExpanded="true" />
-        <EntityTypeShape EntityType="SharedExpenseDBModel.UserExpense" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.UserGroup" Width="1.5" PointX="6" PointY="4" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.UserLogIn" Width="1.5" PointX="4.875" PointY="6.625" IsExpanded="true" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_ApplicationUserInformation_UserLogIn" ManuallyRouted="false" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_UserGroup_ApplicationUserInformation" ManuallyRouted="false" />
-        <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_ExpenseType" ManuallyRouted="false" />
-        <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_Groups" ManuallyRouted="false" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_UserGroup_Groups" ManuallyRouted="false" />
-        <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="SharedExpenseDBModel.FK_ExpenseType_Status" />
+        <EntityTypeShape EntityType="SharedExpenseDBModel.GroupExpense" Width="1.5" PointX="7.125" PointY="0.75" />
+        <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_ExpenseType1" />
+        <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_Group" />
+        <AssociationConnector Association="SharedExpenseDBModel.FK_UserExpense_Status1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

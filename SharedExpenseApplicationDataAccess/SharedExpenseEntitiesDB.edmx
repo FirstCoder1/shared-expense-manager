@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SharedExpenseDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SharedExpenseDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="__RefactorLog">
           <Key>
             <PropertyRef Name="OperationKey" />
@@ -29,8 +29,23 @@
             <PropertyRef Name="ExpenseTypeId" />
           </Key>
           <Property Name="ExpenseTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ExpenseTypeName" Type="nchar" MaxLength="10" Nullable="false" />
-          <Property Name="ExpenseTypeStatus" Type="int" Nullable="false" />
+          <Property Name="ExpenseTypeName" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupExpense">
+          <Key>
+            <PropertyRef Name="ExpenseId" />
+          </Key>
+          <Property Name="ExpenseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="ExpenseDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="ExpenseTypeId" Type="int" Nullable="false" />
+          <Property Name="ExpenseAmount" Type="money" Nullable="false" />
+          <Property Name="ExpenseStatusId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
@@ -49,31 +64,16 @@
           <Key>
             <PropertyRef Name="ScoreId" />
           </Key>
-          <Property Name="ScoreId" Type="int" Nullable="false" />
+          <Property Name="ScoreId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
             <PropertyRef Name="StatusId" />
           </Key>
           <Property Name="StatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="StatusDescription" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
-          <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
-        </EntityType>
-        <EntityType Name="UserExpense">
-          <Key>
-            <PropertyRef Name="ExpenseId" />
-          </Key>
-          <Property Name="ExpenseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="ExpenseDate" Type="datetime2" Precision="7" Nullable="false" />
-          <Property Name="ExpenseTypeId" Type="int" Nullable="false" />
-          <Property Name="ExpenseAmount" Type="money" Nullable="false" />
-          <Property Name="ExpenseStatusId" Type="int" Nullable="false" />
-          <Property Name="GroupId" Type="int" Nullable="false" />
-          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
-          <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" />
+          <Property Name="LastUpdate" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="UserGroup">
           <Key>
@@ -108,38 +108,50 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ExpenseType_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="1" />
+          <End Role="ExpenseType" Type="Self.ExpenseType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="ExpenseType">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserExpense_ExpenseType">
           <End Role="ExpenseType" Type="Self.ExpenseType" Multiplicity="1" />
-          <End Role="UserExpense" Type="Self.UserExpense" Multiplicity="*" />
+          <End Role="GroupExpense" Type="Self.GroupExpense" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ExpenseType">
               <PropertyRef Name="ExpenseTypeId" />
             </Principal>
-            <Dependent Role="UserExpense">
+            <Dependent Role="GroupExpense">
               <PropertyRef Name="ExpenseTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserExpense_Groups">
+        <Association Name="FK_UserExpense_Group">
           <End Role="Groups" Type="Self.Groups" Multiplicity="1" />
-          <End Role="UserExpense" Type="Self.UserExpense" Multiplicity="*" />
+          <End Role="GroupExpense" Type="Self.GroupExpense" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Groups">
               <PropertyRef Name="GroupId" />
             </Principal>
-            <Dependent Role="UserExpense">
+            <Dependent Role="GroupExpense">
               <PropertyRef Name="GroupId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserExpense_Status">
           <End Role="Status" Type="Self.Status" Multiplicity="1" />
-          <End Role="UserExpense" Type="Self.UserExpense" Multiplicity="*" />
+          <End Role="GroupExpense" Type="Self.GroupExpense" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Status">
               <PropertyRef Name="StatusId" />
             </Principal>
-            <Dependent Role="UserExpense">
+            <Dependent Role="GroupExpense">
               <PropertyRef Name="ExpenseStatusId" />
             </Dependent>
           </ReferentialConstraint>
@@ -172,27 +184,31 @@
           <EntitySet Name="__RefactorLog" EntityType="Self.__RefactorLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ApplicationUserInformation" EntityType="Self.ApplicationUserInformation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExpenseType" EntityType="Self.ExpenseType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupExpense" EntityType="Self.GroupExpense" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Score" EntityType="Self.Score" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserExpense" EntityType="Self.UserExpense" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserGroup" EntityType="Self.UserGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserLogIn" EntityType="Self.UserLogIn" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_ApplicationUserInformation_UserLogIn" Association="Self.FK_ApplicationUserInformation_UserLogIn">
             <End Role="UserLogIn" EntitySet="UserLogIn" />
             <End Role="ApplicationUserInformation" EntitySet="ApplicationUserInformation" />
           </AssociationSet>
+          <AssociationSet Name="FK_ExpenseType_Status" Association="Self.FK_ExpenseType_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="ExpenseType" EntitySet="ExpenseType" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserExpense_ExpenseType" Association="Self.FK_UserExpense_ExpenseType">
             <End Role="ExpenseType" EntitySet="ExpenseType" />
-            <End Role="UserExpense" EntitySet="UserExpense" />
+            <End Role="GroupExpense" EntitySet="GroupExpense" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserExpense_Groups" Association="Self.FK_UserExpense_Groups">
+          <AssociationSet Name="FK_UserExpense_Group" Association="Self.FK_UserExpense_Group">
             <End Role="Groups" EntitySet="Groups" />
-            <End Role="UserExpense" EntitySet="UserExpense" />
+            <End Role="GroupExpense" EntitySet="GroupExpense" />
           </AssociationSet>
           <AssociationSet Name="FK_UserExpense_Status" Association="Self.FK_UserExpense_Status">
             <End Role="Status" EntitySet="Status" />
-            <End Role="UserExpense" EntitySet="UserExpense" />
+            <End Role="GroupExpense" EntitySet="GroupExpense" />
           </AssociationSet>
           <AssociationSet Name="FK_UserGroup_ApplicationUserInformation" Association="Self.FK_UserGroup_ApplicationUserInformation">
             <End Role="ApplicationUserInformation" EntitySet="ApplicationUserInformation" />
@@ -203,8 +219,7 @@
             <End Role="UserGroup" EntitySet="UserGroup" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SharedExpenseDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -234,11 +249,12 @@
             <PropertyRef Name="ExpenseTypeId" />
           </Key>
           <Property Name="ExpenseTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ExpenseTypeName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="ExpenseTypeStatus" Type="Int32" Nullable="false" />
+          <Property Name="ExpenseTypeName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="UserExpenses" Relationship="Self.FK_UserExpense_ExpenseType" FromRole="ExpenseType" ToRole="UserExpense" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Status" Relationship="SharedExpenseDBModel.FK_ExpenseType_Status" FromRole="ExpenseType" ToRole="Status" />
+          <NavigationProperty Name="GroupExpenses" Relationship="SharedExpenseDBModel.FK_UserExpense_ExpenseType1" FromRole="ExpenseType" ToRole="GroupExpense" />
         </EntityType>
         <EntityType Name="Group">
           <Key>
@@ -250,8 +266,8 @@
           <Property Name="GroupExpense" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="UserExpenses" Relationship="Self.FK_UserExpense_Groups" FromRole="Groups" ToRole="UserExpense" />
           <NavigationProperty Name="UserGroups" Relationship="Self.FK_UserGroup_Groups" FromRole="Groups" ToRole="UserGroup" />
+          <NavigationProperty Name="GroupExpenses" Relationship="SharedExpenseDBModel.FK_UserExpense_Group" FromRole="Group" ToRole="GroupExpense" />
         </EntityType>
         <EntityType Name="Score">
           <Key>
@@ -264,28 +280,9 @@
             <PropertyRef Name="StatusId" />
           </Key>
           <Property Name="StatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StatusDescription" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="UserExpenses" Relationship="Self.FK_UserExpense_Status" FromRole="Status" ToRole="UserExpense" />
-        </EntityType>
-        <EntityType Name="UserExpense">
-          <Key>
-            <PropertyRef Name="ExpenseId" />
-          </Key>
-          <Property Name="ExpenseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ExpenseDate" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="ExpenseTypeId" Type="Int32" Nullable="false" />
-          <Property Name="ExpenseAmount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="ExpenseStatusId" Type="Int32" Nullable="false" />
-          <Property Name="GroupId" Type="Int32" Nullable="false" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="ExpenseType" Relationship="Self.FK_UserExpense_ExpenseType" FromRole="UserExpense" ToRole="ExpenseType" />
-          <NavigationProperty Name="Group" Relationship="Self.FK_UserExpense_Groups" FromRole="UserExpense" ToRole="Groups" />
-          <NavigationProperty Name="Status" Relationship="Self.FK_UserExpense_Status" FromRole="UserExpense" ToRole="Status" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ExpenseTypes" Relationship="SharedExpenseDBModel.FK_ExpenseType_Status" FromRole="Status" ToRole="ExpenseType" />
+          <NavigationProperty Name="GroupExpenses" Relationship="SharedExpenseDBModel.FK_UserExpense_Status1" FromRole="Status" ToRole="GroupExpense" />
         </EntityType>
         <EntityType Name="UserGroup">
           <Key>
@@ -335,30 +332,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserExpense_ExpenseType">
-          <End Role="ExpenseType" Type="Self.ExpenseType" Multiplicity="1" />
-          <End Role="UserExpense" Type="Self.UserExpense" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ExpenseType">
-              <PropertyRef Name="ExpenseTypeId" />
-            </Principal>
-            <Dependent Role="UserExpense">
-              <PropertyRef Name="ExpenseTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserExpense_Groups">
-          <End Role="Groups" Type="Self.Group" Multiplicity="1" />
-          <End Role="UserExpense" Type="Self.UserExpense" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Groups">
-              <PropertyRef Name="GroupId" />
-            </Principal>
-            <Dependent Role="UserExpense">
-              <PropertyRef Name="GroupId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_UserGroup_Groups">
           <End Role="Groups" Type="Self.Group" Multiplicity="1" />
           <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="*" />
@@ -371,18 +344,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserExpense_Status">
-          <End Role="Status" Type="Self.Status" Multiplicity="1" />
-          <End Role="UserExpense" Type="Self.UserExpense" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Status">
-              <PropertyRef Name="StatusId" />
-            </Principal>
-            <Dependent Role="UserExpense">
-              <PropertyRef Name="ExpenseStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="SharedExpenseDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="C__RefactorLog" EntityType="Self.C__RefactorLog" />
           <EntitySet Name="ApplicationUserInformations" EntityType="Self.ApplicationUserInformation" />
@@ -390,7 +351,6 @@
           <EntitySet Name="Groups" EntityType="Self.Group" />
           <EntitySet Name="Scores" EntityType="Self.Score" />
           <EntitySet Name="Status" EntityType="Self.Status" />
-          <EntitySet Name="UserExpenses" EntityType="Self.UserExpense" />
           <EntitySet Name="UserGroups" EntityType="Self.UserGroup" />
           <EntitySet Name="UserLogIns" EntityType="Self.UserLogIn" />
           <AssociationSet Name="FK_ApplicationUserInformation_UserLogIn" Association="Self.FK_ApplicationUserInformation_UserLogIn">
@@ -401,23 +361,94 @@
             <End Role="ApplicationUserInformation" EntitySet="ApplicationUserInformations" />
             <End Role="UserGroup" EntitySet="UserGroups" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserExpense_ExpenseType" Association="Self.FK_UserExpense_ExpenseType">
-            <End Role="ExpenseType" EntitySet="ExpenseTypes" />
-            <End Role="UserExpense" EntitySet="UserExpenses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserExpense_Groups" Association="Self.FK_UserExpense_Groups">
-            <End Role="Groups" EntitySet="Groups" />
-            <End Role="UserExpense" EntitySet="UserExpenses" />
-          </AssociationSet>
           <AssociationSet Name="FK_UserGroup_Groups" Association="Self.FK_UserGroup_Groups">
             <End Role="Groups" EntitySet="Groups" />
             <End Role="UserGroup" EntitySet="UserGroups" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserExpense_Status" Association="Self.FK_UserExpense_Status">
+          <AssociationSet Name="FK_ExpenseType_Status" Association="SharedExpenseDBModel.FK_ExpenseType_Status">
             <End Role="Status" EntitySet="Status" />
-            <End Role="UserExpense" EntitySet="UserExpenses" />
+            <End Role="ExpenseType" EntitySet="ExpenseTypes" />
+          </AssociationSet>
+          <EntitySet Name="GroupExpenses" EntityType="SharedExpenseDBModel.GroupExpense" />
+          <AssociationSet Name="FK_UserExpense_ExpenseType1" Association="SharedExpenseDBModel.FK_UserExpense_ExpenseType1">
+            <End Role="ExpenseType" EntitySet="ExpenseTypes" />
+            <End Role="GroupExpense" EntitySet="GroupExpenses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserExpense_Group" Association="SharedExpenseDBModel.FK_UserExpense_Group">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="GroupExpense" EntitySet="GroupExpenses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserExpense_Status1" Association="SharedExpenseDBModel.FK_UserExpense_Status1">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="GroupExpense" EntitySet="GroupExpenses" />
           </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_ExpenseType_Status">
+          <End Type="SharedExpenseDBModel.Status" Role="Status" Multiplicity="1" />
+          <End Type="SharedExpenseDBModel.ExpenseType" Role="ExpenseType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="ExpenseType">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GroupExpense">
+          <Key>
+            <PropertyRef Name="ExpenseId" />
+          </Key>
+          <Property Name="ExpenseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ExpenseDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="ExpenseTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ExpenseAmount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="ExpenseStatusId" Type="Int32" Nullable="false" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="ExpenseType" Relationship="SharedExpenseDBModel.FK_UserExpense_ExpenseType1" FromRole="GroupExpense" ToRole="ExpenseType" />
+          <NavigationProperty Name="Group" Relationship="SharedExpenseDBModel.FK_UserExpense_Group" FromRole="GroupExpense" ToRole="Group" />
+          <NavigationProperty Name="Status" Relationship="SharedExpenseDBModel.FK_UserExpense_Status1" FromRole="GroupExpense" ToRole="Status" />
+        </EntityType>
+        <Association Name="FK_UserExpense_ExpenseType1">
+          <End Type="SharedExpenseDBModel.ExpenseType" Role="ExpenseType" Multiplicity="1" />
+          <End Type="SharedExpenseDBModel.GroupExpense" Role="GroupExpense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExpenseType">
+              <PropertyRef Name="ExpenseTypeId" />
+            </Principal>
+            <Dependent Role="GroupExpense">
+              <PropertyRef Name="ExpenseTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserExpense_Group">
+          <End Type="SharedExpenseDBModel.Group" Role="Group" Multiplicity="1" />
+          <End Type="SharedExpenseDBModel.GroupExpense" Role="GroupExpense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupExpense">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserExpense_Status1">
+          <End Type="SharedExpenseDBModel.Status" Role="Status" Multiplicity="1" />
+          <End Type="SharedExpenseDBModel.GroupExpense" Role="GroupExpense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="GroupExpense">
+              <PropertyRef Name="ExpenseStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -448,9 +479,9 @@
           <EntitySetMapping Name="ExpenseTypes">
             <EntityTypeMapping TypeName="SharedExpenseDBModel.ExpenseType">
               <MappingFragment StoreEntitySet="ExpenseType">
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
                 <ScalarProperty Name="ExpenseTypeId" ColumnName="ExpenseTypeId" />
                 <ScalarProperty Name="ExpenseTypeName" ColumnName="ExpenseTypeName" />
-                <ScalarProperty Name="ExpenseTypeStatus" ColumnName="ExpenseTypeStatus" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
               </MappingFragment>
@@ -478,27 +509,9 @@
           <EntitySetMapping Name="Status">
             <EntityTypeMapping TypeName="SharedExpenseDBModel.Status">
               <MappingFragment StoreEntitySet="Status">
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="StatusDescription" ColumnName="StatusDescription" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserExpenses">
-            <EntityTypeMapping TypeName="SharedExpenseDBModel.UserExpense">
-              <MappingFragment StoreEntitySet="UserExpense">
-                <ScalarProperty Name="ExpenseId" ColumnName="ExpenseId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ExpenseDate" ColumnName="ExpenseDate" />
-                <ScalarProperty Name="ExpenseTypeId" ColumnName="ExpenseTypeId" />
-                <ScalarProperty Name="ExpenseAmount" ColumnName="ExpenseAmount" />
-                <ScalarProperty Name="ExpenseStatusId" ColumnName="ExpenseStatusId" />
-                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
-              </MappingFragment>
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserGroups">
@@ -521,6 +534,22 @@
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GroupExpenses">
+            <EntityTypeMapping TypeName="SharedExpenseDBModel.GroupExpense">
+              <MappingFragment StoreEntitySet="GroupExpense">
+                <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="ExpenseStatusId" ColumnName="ExpenseStatusId" />
+                <ScalarProperty Name="ExpenseAmount" ColumnName="ExpenseAmount" />
+                <ScalarProperty Name="ExpenseTypeId" ColumnName="ExpenseTypeId" />
+                <ScalarProperty Name="ExpenseDate" ColumnName="ExpenseDate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ExpenseId" ColumnName="ExpenseId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

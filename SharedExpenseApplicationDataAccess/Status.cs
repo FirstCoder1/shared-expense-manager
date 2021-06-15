@@ -17,15 +17,16 @@ namespace SharedExpenseApplicationDataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Status()
         {
-            this.UserExpenses = new HashSet<UserExpense>();
+            this.ExpenseTypes = new HashSet<ExpenseType>();
+            this.GroupExpenses = new HashSet<GroupExpense>();
         }
     
         public int StatusId { get; set; }
-        public string StatusDescription { get; set; }
-        public System.DateTime CreateDate { get; set; }
-        public System.DateTime LastUpdate { get; set; }
+        public string Description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserExpense> UserExpenses { get; set; }
+        public virtual ICollection<ExpenseType> ExpenseTypes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GroupExpense> GroupExpenses { get; set; }
     }
 }

@@ -265,7 +265,7 @@ namespace SharedExpensePortalClientApplication.Controllers
                     _db.SaveChanges();
 
                     //Store Group Expense information in [dbo].[UserExpense] table for future extension
-                    var storeData = new UserExpense()
+                    var storeData = new GroupExpense()
                     {
                         Title = expenseInformation.Expense ?? expenseInformation.Title,
                         Description = expenseInformation.Description,
@@ -274,9 +274,9 @@ namespace SharedExpensePortalClientApplication.Controllers
                                         .Select(x => x.ExpenseTypeId).FirstOrDefault(),
                         GroupId = userGroup.GroupId,
                         ExpenseAmount = expenseInformation.ExpenseAmount,
-                        ExpenseStatusId = _db.Status.FirstOrDefault(x => x.StatusDescription == "ACTIVE").StatusId
+                        ExpenseStatusId = _db.Status.FirstOrDefault(x => x.Description == "ACTIVE").StatusId
                     };
-                    _db.UserExpenses.Add(storeData);
+                    _db.GroupExpenses.Add(storeData);
                     _db.SaveChanges();
 
                     return RedirectToAction("ViewDashboard");
@@ -319,7 +319,7 @@ namespace SharedExpensePortalClientApplication.Controllers
                 expenseType = new ExpenseType
                 {
                     ExpenseTypeName = expenseInfo.Title,
-                    ExpenseTypeStatus = dbContext.Status.FirstOrDefault(x => x.StatusDescription == "ACTIVE").StatusId
+                    StatusId = dbContext.Status.FirstOrDefault(x => x.Description == "ACTIVE").StatusId
                 };
                 dbContext.ExpenseTypes.Add(expenseType);
                 dbContext.SaveChanges();

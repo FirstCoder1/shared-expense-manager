@@ -70,4 +70,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="ScoreId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="000d8b04-d186-42f1-8ded-15f952f0cfbd" ChangeDateTime="06/15/2021 00:48:56">
+    <Property Name="ElementName" Value="[dbo].[ExpenseType].[ExpenseTypeStatus]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ExpenseType]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="StatusId" />
+  </Operation>
 </Operations>
