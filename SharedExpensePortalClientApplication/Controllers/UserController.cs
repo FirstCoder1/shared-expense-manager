@@ -250,6 +250,8 @@ namespace SharedExpensePortalClientApplication.Controllers
                         var appUserId = _db.ApplicationUserInformations.Where(x => x.UserEmailId == expenseInformation.EmailId)
                             .Select(x => x.UserId).FirstOrDefault();
 
+                        //If Group > 1 => Divide by GroupId
+
                         ////Identify if both the users are already part of single Group
                         //var userGroupResult = _db.UserGroups.Where(x => x.UserId == appUserId && x.UserId == sessionUserInfo.UserId).GroupBy(x => x.GroupId).
                         //    Where(grp => grp.Count() == 2).Select(grp => grp.Key).FirstOrDefault();
@@ -273,6 +275,8 @@ namespace SharedExpensePortalClientApplication.Controllers
                         ExpenseTypeId = expenseType != null ? expenseType.ExpenseTypeId : _db.ExpenseTypes.Where(x => x.ExpenseTypeName == expenseInformation.Expense)
                                         .Select(x => x.ExpenseTypeId).FirstOrDefault(),
                         GroupId = userGroup.GroupId,
+                        //PayerId
+                        //ReceiverIdList = Excluding Payer
                         ExpenseAmount = expenseInformation.ExpenseAmount,
                         ExpenseStatusId = _db.Status.FirstOrDefault(x => x.Description == "ACTIVE").StatusId
                     };

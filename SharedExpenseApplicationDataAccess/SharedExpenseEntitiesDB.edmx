@@ -72,8 +72,6 @@
           </Key>
           <Property Name="StatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="CreateDate" Type="datetime2" Precision="7" />
-          <Property Name="LastUpdate" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="UserGroup">
           <Key>
@@ -84,6 +82,7 @@
           <Property Name="GroupId" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="LastUpdate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="TransactionAmount" Type="int" />
         </EntityType>
         <EntityType Name="UserLogIn">
           <Key>
@@ -295,6 +294,7 @@
           <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="7" />
           <NavigationProperty Name="ApplicationUserInformation" Relationship="Self.FK_UserGroup_ApplicationUserInformation" FromRole="UserGroup" ToRole="ApplicationUserInformation" />
           <NavigationProperty Name="Group" Relationship="Self.FK_UserGroup_Groups" FromRole="UserGroup" ToRole="Groups" />
+          <Property Name="TransactionAmount" Type="Int32" />
         </EntityType>
         <EntityType Name="UserLogIn">
           <Key>
@@ -517,6 +517,7 @@
           <EntitySetMapping Name="UserGroups">
             <EntityTypeMapping TypeName="SharedExpenseDBModel.UserGroup">
               <MappingFragment StoreEntitySet="UserGroup">
+                <ScalarProperty Name="TransactionAmount" ColumnName="TransactionAmount" />
                 <ScalarProperty Name="UserGroupId" ColumnName="UserGroupId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />
