@@ -177,7 +177,7 @@
     <Content Include="Views\User\EnterExpense.cshtml" />
     <Content Include="Views\User\Register.cshtml" />
     <Content Include="Views\User\EditUserInformation.cshtml" />
-    <Content Include="Views\User\ViewScoreCard.cshtml" />
+    <Content Include="Views\User\ViewScore.cshtml" />
     <Content Include="Views\User\ViewRandom.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -49,7 +49,7 @@ namespace SharedExpensePortalClientApplication.Models
     public class UserScoreCardModel
     {
         public string UserName { get; set; }
-        public string Score { get; set; }
+        public decimal? Score { get; set; }
     }
     public class ExpenseViewModel
     {

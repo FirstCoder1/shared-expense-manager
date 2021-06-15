@@ -6,13 +6,13 @@
     <edmx:Diagrams>
       <Diagram DiagramId="22e465108c0b4588a0401e004e60485a" Name="Diagram1" ZoomLevel="94">
         <EntityTypeShape EntityType="SharedExpenseDBModel.C__RefactorLog" Width="1.5" PointX="2.75" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="SharedExpenseDBModel.ApplicationUserInformation" Width="1.5" PointX="10" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SharedExpenseDBModel.ApplicationUserInformation" Width="1.5" PointX="8.625" PointY="1.625" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.ExpenseType" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.Group" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="SharedExpenseDBModel.Score" Width="1.5" PointX="8.375" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SharedExpenseDBModel.Score" Width="1.5" PointX="5.375" PointY="1.375" IsExpanded="true" />
         <EntityTypeShape EntityType="SharedExpenseDBModel.Status" Width="1.5" PointX="0.875" PointY="7" IsExpanded="true" />
-        <EntityTypeShape EntityType="SharedExpenseDBModel.UserGroup" Width="1.5" PointX="6.875" PointY="4.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="SharedExpenseDBModel.UserLogIn" Width="1.5" PointX="9.25" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SharedExpenseDBModel.UserGroup" Width="1.5" PointX="5.75" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SharedExpenseDBModel.UserLogIn" Width="1.5" PointX="7.875" PointY="5.25" IsExpanded="true" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_ApplicationUserInformation_UserLogIn" ManuallyRouted="false" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_UserGroup_ApplicationUserInformation" ManuallyRouted="false" />
         <AssociationConnector Association="SharedExpenseDBModel.FK_UserGroup_Groups" ManuallyRouted="false" />

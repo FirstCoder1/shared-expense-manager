@@ -69,18 +69,18 @@ namespace SharedExpensePortalClientApplication.Controllers
             return View();
         }
 
-        // GET: UserGroupInformation
-        [HttpGet]
-        public ActionResult ViewScoreCard(RouteValueDictionary ReturnUrl)
-        {
-            using (SharedExpenseDBEntities _db = new SharedExpenseDBEntities())
-            {
-                var userId = Convert.ToInt32(ReturnUrl["Id"]);
-                var queryResult = _db.ApplicationUserInformations.FirstOrDefault(a => a.LogInId == userId);
+        //// GET: UserGroupInformation
+        //[HttpGet]
+        //public ActionResult ViewScoreCard(RouteValueDictionary ReturnUrl)
+        //{
+        //    using (SharedExpenseDBEntities _db = new SharedExpenseDBEntities())
+        //    {
+        //        var userId = Convert.ToInt32(ReturnUrl["Id"]);
+        //        var queryResult = _db.ApplicationUserInformations.FirstOrDefault(a => a.LogInId == userId);
 
-                return View();
-            }
-        }
+        //        return View();
+        //    }
+        //}
 
         // GET: EditUserInformation
         [HttpGet]
@@ -108,12 +108,18 @@ namespace SharedExpensePortalClientApplication.Controllers
         [HttpGet]
         public ActionResult ViewScore()
         {
-            UserScoreCardModel appUser = new UserScoreCardModel();
-
+            List<UserScoreCardModel> appUser = new List<UserScoreCardModel>();
+            decimal? total = 0;
             using (SharedExpenseDBEntities _db = new SharedExpenseDBEntities())
             {
-
+                var _appUser = _db.UserScoreView(Convert.ToInt32(Session["UserId"]));
+                foreach (UserScoreView_Result score in _appUser)
+                {
+                    total += score.Score;
+                    appUser.Add(new UserScoreCardModel { UserName = score.UserName, Score = score.Score});
+                }
             }
+            appUser.Add(new UserScoreCardModel { UserName = "Total", Score = total });
             return View(appUser);
         }
 
