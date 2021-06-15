@@ -104,6 +104,20 @@ namespace SharedExpensePortalClientApplication.Controllers
             return View(appUser);
         }
 
+        // GET: View Score
+        [HttpGet]
+        public ActionResult ViewScore()
+        {
+            UserScoreCardModel appUser = new UserScoreCardModel();
+
+            using (SharedExpenseDBEntities _db = new SharedExpenseDBEntities())
+            {
+
+            }
+            return View(appUser);
+        }
+
+
         //POST: UserRegister
         [HttpPost]
         [AllowAnonymous]

@@ -12,6 +12,8 @@ namespace SharedExpenseApplicationDataAccess
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class SharedExpenseDBEntities : DbContext
     {
@@ -34,5 +36,14 @@ namespace SharedExpenseApplicationDataAccess
         public virtual DbSet<UserGroup> UserGroups { get; set; }
         public virtual DbSet<UserLogIn> UserLogIns { get; set; }
         public virtual DbSet<GroupExpense> GroupExpenses { get; set; }
+    
+        public virtual ObjectResult<UserScoreView_Result> UserScoreView(Nullable<int> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UserScoreView_Result>("UserScoreView", userIdParameter);
+        }
     }
 }

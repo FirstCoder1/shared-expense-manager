@@ -173,11 +173,12 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\LogIn.cshtml" />
     <Content Include="Views\User\ViewUserInformation.cshtml" />
-    <Content Include="Views\User\ViewScoreCard.cshtml" />
     <Content Include="Views\User\ViewDashboard.cshtml" />
     <Content Include="Views\User\EnterExpense.cshtml" />
     <Content Include="Views\User\Register.cshtml" />
     <Content Include="Views\User\EditUserInformation.cshtml" />
+    <Content Include="Views\User\ViewScoreCard.cshtml" />
+    <Content Include="Views\User\ViewRandom.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -93,6 +93,9 @@
     <Compile Include="UserLogIn.cs">
       <DependentUpon>SharedExpenseEntitiesDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="UserScoreView_Result.cs">
+      <DependentUpon>SharedExpenseEntitiesDB.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="SharedExpenseEntitiesDB.edmx">

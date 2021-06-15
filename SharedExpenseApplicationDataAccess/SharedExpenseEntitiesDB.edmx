@@ -180,6 +180,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="UserScoreView" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="SharedExpenseDBModelStoreContainer">
           <EntitySet Name="__RefactorLog" EntityType="Self.__RefactorLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ApplicationUserInformation" EntityType="Self.ApplicationUserInformation" Schema="dbo" store:Type="Tables" />
@@ -384,6 +387,9 @@
             <End Role="Status" EntitySet="Status" />
             <End Role="GroupExpense" EntitySet="GroupExpenses" />
           </AssociationSet>
+          <FunctionImport Name="UserScoreView" ReturnType="Collection(SharedExpenseDBModel.UserScoreView_Result)">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <Association Name="FK_ExpenseType_Status">
           <End Type="SharedExpenseDBModel.Status" Role="Status" Multiplicity="1" />
@@ -451,6 +457,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="UserScoreView_Result">
+          <Property Type="String" Name="UserName" Nullable="true" MaxLength="256" />
+          <Property Type="Decimal" Name="Score" Nullable="true" Precision="18" Scale="0" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -557,6 +567,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="UserScoreView" FunctionName="SharedExpenseDBModel.Store.UserScoreView">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SharedExpenseDBModel.UserScoreView_Result">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

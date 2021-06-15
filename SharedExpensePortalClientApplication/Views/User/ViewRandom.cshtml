@@ -1,0 +1,81 @@
+﻿@model IEnumerable<SharedExpenseApplicationDataAccess.GroupExpense>
+
+@{
+    ViewBag.Title = "ViewRandom";
+}
+
+<h2>ViewRandom</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExpenseDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExpenseAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastUpdate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExpenseType.ExpenseTypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Group.GroupName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status.Description)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExpenseDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExpenseAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastUpdate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExpenseType.ExpenseTypeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Group.GroupName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status.Description)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ExpenseId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ExpenseId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ExpenseId })
+        </td>
+    </tr>
+}
+
+</table>

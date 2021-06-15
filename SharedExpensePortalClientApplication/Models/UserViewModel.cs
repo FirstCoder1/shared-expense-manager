@@ -46,14 +46,11 @@ namespace SharedExpensePortalClientApplication.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
-
-    public class UserScoreCardViewModel
+    public class UserScoreCardModel
     {
         public string UserName { get; set; }
-
         public string Score { get; set; }
     }
-
     public class ExpenseViewModel
     {
         [Display(Name = "User Name")]
