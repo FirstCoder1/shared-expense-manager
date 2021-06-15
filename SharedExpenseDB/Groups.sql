@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Groups]
 (
-	[GroupId] INT NOT NULL IDENTITY PRIMARY KEY, 
+	[GroupId] INT NOT NULL IDENTITY(1,1) PRIMARY KEY, 
     [GroupName] NVARCHAR(256) NOT NULL, 
     [GroupDescription] NVARCHAR(MAX) NULL, 
     [GroupExpense] MONEY NOT NULL DEFAULT 0.00,

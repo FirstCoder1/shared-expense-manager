@@ -61,8 +61,11 @@
     <Build Include="UserGroup.sql" />
     <Build Include="ApplicationUserInformation.sql" />
     <Build Include="UserLogIn.sql" />
-    <Build Include="UserExpense.sql" />
     <Build Include="ExpenseType.sql" />
+    <Build Include="GroupExpense.sql" />
+    <Build Include="Groups.sql" />
+    <Build Include="Score.sql" />
+    <Build Include="Status.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="SharedExpenseDB.refactorlog" />

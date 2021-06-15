@@ -1,4 +1,4 @@
 ﻿CREATE TABLE [dbo].[Score]
 (
-	[ScoreId] INT NOT NULL PRIMARY KEY
+	[ScoreId] INT NOT NULL IDENTITY(1,1) PRIMARY KEY
 )

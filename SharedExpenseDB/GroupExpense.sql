@@ -1,6 +1,6 @@
-﻿CREATE TABLE [dbo].[UserExpense]
+﻿CREATE TABLE [dbo].[GroupExpense]
 (
-	[ExpenseId] INT NOT NULL IDENTITY PRIMARY KEY, 
+	[ExpenseId] INT NOT NULL IDENTITY(1,1) PRIMARY KEY, 
     [Title] NVARCHAR(256) NOT NULL, 
     [Description] NVARCHAR(MAX) NULL, 
     [ExpenseDate] DATETIME2 NOT NULL, 
