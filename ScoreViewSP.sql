@@ -46,10 +46,10 @@ DECLARE @UserScore TABLE(
 	Score decimal
 )
 
-
+--
 INSERT INTO @PayerGroupMapping
 SELECT GroupId, UserId, TransactionAmount, IsPayer FROM (SELECT * FROM [dbo].[UserGroup] WHERE GroupId in 
-(SELECT GroupId FROM [dbo].[UserGroup] WHERE UserId = 10)) A WHERE A.IsPayer = 1 ORDER BY GroupId ASC
+(SELECT GroupId FROM [dbo].[UserGroup] WHERE UserId = @PayerId)) A WHERE A.IsPayer = 1 ORDER BY GroupId ASC
 SELECT * FROM @PayerGroupMapping
 
 --Pick groupId
@@ -60,7 +60,7 @@ SELECT * FROM @GroupList
 INSERT INTO @SelfGroupExpenseAmount
 SELECT UG.GroupId, UG.UserId, PG.UserId, UG.TransactionAmount FROM [dbo].[UserGroup] UG 
 INNER JOIN @PayerGroupMapping PG ON UG.GroupId = PG.GroupId
-WHERE UG.GroupId IN (SELECT GroupId FROM @GroupList) AND UG.UserId = 10
+WHERE UG.GroupId IN (SELECT GroupId FROM @GroupList) AND UG.UserId = @PayerId
 SELECT * FROM @SelfGroupExpenseAmount
 
 INSERT INTO @UsersToDisplay
