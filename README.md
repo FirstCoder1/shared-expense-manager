@@ -11,6 +11,9 @@ Looking at this page, user can conclude that next tme he has day out with Ruby, 
 
 If the system is easy to use people will use it and over time the scores will tend to balance. So they can spend time together without being concerned too much about who is going to pay this time
 
+## Database Design:
+
+
 ## Features:
 
 | Feature  | Description |
