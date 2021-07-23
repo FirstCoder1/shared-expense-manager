@@ -4,6 +4,13 @@
 
 A group of people, for example, Jerry, George, Elaine and Kramer sometimes eat together, in various combinations and in different places with varying costs. They don't want to settle the score each time and want the computer to help them. So after they have lunch, somebody logs into the computer and quickly inputs the participants, the amount and who paid the bill. After the data is entered, everyone can bring their personal page and see their score with respect to other people.
 
+![alt text](https://github.com/Panth-Shah/SharedExpenseManager/blob/master/SharedExpensePortal.PNG)
+
+So if user's score with Ruby is -$11.00, then user owes Ruby $11.00. If user's score with Sam is (+)$309.00 than Sam owes user money.
+Looking at this page, user can conclude that next tme he has day out with Ruby, he should pay and Sam should be more social type when he will have outing with user next.
+
+If the system is easy to use people will use it and over time the scores will tend to balance. So they can spend time together without being concerned too much about who is going to pay this time
+
 ## Features:
 
 | Feature  | Description |
