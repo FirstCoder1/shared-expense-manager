@@ -13,6 +13,7 @@ If the system is easy to use people will use it and over time the scores will te
 
 ## Database Design:
 
+![alt text](https://github.com/Panth-Shah/SharedExpenseManager/blob/master/SharedExpenseApplicationDB.PNG)
 
 ## Features:
 
@@ -28,3 +29,5 @@ If the system is easy to use people will use it and over time the scores will te
 | Score Page  | Display name of the person and the score. Also display a total of all scores. Display only scores that are not zero.  |
 | Self-registration  | Users can register themselves in the system.  |
 | User Preferences  | Each user can go to their preferences page, change their name, password and possibly other parameters.  |
+
+## Application Pages:
